@@ -4,8 +4,9 @@ function App() {
   return (
     <>
       <div>
+        {" "}
         <label>
-          Text input: <input name="myInput" />
+          Wallet Address: <input name="myInput" />
         </label>
       </div>
     </>
