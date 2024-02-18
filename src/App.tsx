@@ -1,37 +1,31 @@
-import "@rainbow-me/rainbowkit/styles.css";
-import {
-  getDefaultConfig,
-  RainbowKitProvider,
-  ConnectButton,
-} from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum, base, zora } from "wagmi/chains";
+import { WagmiProvider, useAccount } from "wagmi";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { Profile } from "./Profile";
 import "./App.css";
-import { getTokens } from "./Tokens";
-
-const config = getDefaultConfig({
-  appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
-  chains: [mainnet, polygon, optimism, arbitrum, base, zora],
-});
+import { getTokens } from "./api/Tokens";
+import { config } from "./config";
+import { Account } from "./components/account";
+import { WalletOptions } from "./components/wallet-options";
 
 const queryClient = new QueryClient();
 
-getTokens();
+function ConnectWallet() {
+  const { isConnected } = useAccount();
+  if (isConnected) return <Account />;
+  return <WalletOptions />;
+}
 
 function App() {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <ConnectButton />
-          <Profile />
-        </RainbowKitProvider>
+        <ConnectWallet />
       </QueryClientProvider>
     </WagmiProvider>
   );
 }
+
+setTimeout(() => {
+  getTokens();
+}, 1000);
 
 export default App;
